@@ -1,0 +1,263 @@
+﻿<mah:MetroWindow x:Class="VBank_ControlPanel.Windows.CustomerDashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VBank_ControlPanel.Windows"
+        mc:Ignorable="d"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="VBank: Личный кабинет клиента"
+        Width="900" Height="650" MinWidth="800" MinHeight="600"
+    ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E" WindowTitleBrush="#FF4655" BorderBrush="#FF4655" GlowBrush="#FF4655" BorderThickness="1" TitleForeground="White">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Стиль для Rectangle (фон и тень бенто-карточек) -->
+            <Style x:Key="BentoCardBackgroundStyle" TargetType="Rectangle">
+                <Setter Property="Fill" Value="#2D2D2D"/>
+                <Setter Property="RadiusX" Value="16"/>
+                <Setter Property="RadiusY" Value="16"/>
+                <Setter Property="Margin" Value="10"/>
+                <Setter Property="Stroke" Value="#444444"/>
+                <Setter Property="StrokeThickness" Value="1"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="15" ShadowDepth="5" Color="#333333" Opacity="0.7" RenderingBias="Quality"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Стиль для контейнера контента -->
+            <Style x:Key="BentoContentContainerStyle" TargetType="Border">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Padding" Value="20"/>
+            </Style>
+
+            <Style x:Key="BentoButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+                <Setter Property="Width" Value="200"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Margin" Value="0,15,0,0"/>
+            </Style>
+
+            <Style x:Key="SmallBentoButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+                <Setter Property="Width" Value="120"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Margin" Value="10,0,0,0"/>
+            </Style>
+
+            <!-- Стиль для кнопок редактирования -->
+            <Style x:Key="EditButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Margin" Value="10,0,0,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="BentoTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="0,5,0,0"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+            </Style>
+
+            <!-- Стиль для затемняющего слоя -->
+            <Style x:Key="OverlayStyle" TargetType="Grid">
+                <Setter Property="Background" Value="#80000000"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </Style>
+
+            <!-- Стиль для плавающей панели -->
+            <Style x:Key="FloatingPanelStyle" TargetType="Grid">
+                <Setter Property="Width" Value="400"/>
+                <Setter Property="Height" Value="Auto"/>
+                <Setter Property="MaxHeight" Value="500"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Основной контент -->
+        <Grid x:Name="MainContent">
+            <Grid.Background>
+                <ImageBrush ImageSource="/raw.png" Opacity="0.5" RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill"/>
+            </Grid.Background>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Логотип, заголовок и кнопка выхода -->
+            <Grid Grid.Row="0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,10">
+                    <Border Background="Transparent" CornerRadius="16">
+                        <Image Source="/Images/vbank.png" Width="80" Height="80" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </Border>
+                    <TextBlock Text="Личный кабинет" Foreground="#FFFFFF" FontSize="24" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+                <Button Content="Выйти" Style="{StaticResource SmallBentoButtonStyle}" HorizontalAlignment="Right" Margin="0,20,20,0" Click="Logout_Click"/>
+            </Grid>
+
+            <!-- Основной контент -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <!-- Профиль клиента -->
+                    <Grid Width="650">
+                        <!-- Увеличил ширину -->
+                        <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                        <Border Style="{StaticResource BentoContentContainerStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Мой профиль" Style="{StaticResource BentoTextStyle}" FontSize="20" FontWeight="Bold"/>
+                                <TextBlock x:Name="FullNameTextBlock" Style="{StaticResource BentoTextStyle}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="PhoneTextBlock" Style="{StaticResource BentoTextStyle}"/>
+                                    <Button Content="Редактировать" Style="{StaticResource EditButtonStyle}" Click="EditPhone_Click"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="EmailTextBlock" Style="{StaticResource BentoTextStyle}"/>
+                                    <Button Content="Редактировать" Style="{StaticResource EditButtonStyle}" Click="EditEmail_Click"/>
+                                </StackPanel>
+                                <TextBlock x:Name="PassportTextBlock" Style="{StaticResource BentoTextStyle}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Мои вклады -->
+                    <Grid Width="650" Margin="0,20,0,0">
+                        <!-- Увеличил ширину -->
+                        <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                        <Border Style="{StaticResource BentoContentContainerStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Мои вклады" Style="{StaticResource BentoTextStyle}" FontSize="20" FontWeight="Bold"/>
+                                <ItemsControl x:Name="DepositsItemsControl">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" MouseLeftButtonDown="DepositItem_Click">
+                                                <TextBlock Text="{Binding ContractNumber}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <TextBlock Text="{Binding Amount, StringFormat={}{0:N2}}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <TextBlock Text="{Binding Currency.Code}" Style="{StaticResource BentoTextStyle}" Width="50"/>
+                                                <TextBlock Text="{Binding EndDate, StringFormat=dd.MM.yyyy}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <TextBlock Text="{Binding ReturnAmount, StringFormat={}{0:N2}}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <Button Content="Пополнить" Style="{StaticResource SmallBentoButtonStyle}" Tag="{Binding DepositId}" Click="ReplenishDeposit_Click"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Button Content="Открыть новый вклад" Style="{StaticResource BentoButtonStyle}" Click="OpenNewDeposit_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Мои кредиты -->
+                    <Grid Width="650" Margin="0,20,0,0">
+                        <!-- Увеличил ширину -->
+                        <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                        <Border Style="{StaticResource BentoContentContainerStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Мои кредиты" Style="{StaticResource BentoTextStyle}" FontSize="20" FontWeight="Bold"/>
+                                <ItemsControl x:Name="CreditsItemsControl">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" MouseLeftButtonDown="CreditItem_Click">
+                                                <TextBlock Text="{Binding Credit.ContractNumber}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <TextBlock Text="{Binding Credit.Amount, StringFormat={}{0:N2}}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <TextBlock Text="{Binding Credit.Currency.Code}" Style="{StaticResource BentoTextStyle}" Width="50"/>
+                                                <TextBlock Text="{Binding Credit.Term, StringFormat={}{0} мес.}" Style="{StaticResource BentoTextStyle}" Width="100"/>
+                                                <Button Content="Оплатить" Style="{StaticResource SmallBentoButtonStyle}" Tag="{Binding Credit.CreditId}" Click="PayCredit_Click" Visibility="{Binding PayButtonVisibility}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Button Content="Взять кредит" Style="{StaticResource BentoButtonStyle}" Click="TakeNewCredit_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Слой для всплывающих панелей (действия) -->
+        <Grid x:Name="OverlayLayer" Style="{StaticResource OverlayStyle}" Panel.ZIndex="999">
+            <Grid x:Name="FloatingPanelContainer" Style="{StaticResource FloatingPanelStyle}">
+                <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                <Border Style="{StaticResource BentoContentContainerStyle}">
+                    <StackPanel>
+                        <StackPanel x:Name="FloatingContent">
+                            <!-- Контент будет динамически меняться -->
+                        </StackPanel>
+                        <Button Content="Закрыть" Style="{StaticResource SubtleBentoButtonStyle}" HorizontalAlignment="Center" Margin="0,20,0,0" Click="CloseFloatingPanel_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Слой для всплывающих панелей (подробности) -->
+        <Grid x:Name="DetailsOverlayLayer" Style="{StaticResource OverlayStyle}" Panel.ZIndex="1000">
+            <Grid x:Name="DetailsPanelContainer" Style="{StaticResource FloatingPanelStyle}">
+                <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                <Border Style="{StaticResource BentoContentContainerStyle}">
+                    <StackPanel>
+                        <StackPanel x:Name="DetailsContent">
+                            <!-- Подробная информация -->
+                        </StackPanel>
+                        <Button Content="Закрыть" Style="{StaticResource SubtleBentoButtonStyle}" HorizontalAlignment="Center" Margin="0,20,0,0" Click="CloseDetailsPanel_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Слой для редактирования профиля -->
+        <Grid x:Name="EditOverlayLayer" Style="{StaticResource OverlayStyle}" Panel.ZIndex="1001">
+            <Grid x:Name="EditPanelContainer" Style="{StaticResource FloatingPanelStyle}">
+                <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                <Border Style="{StaticResource BentoContentContainerStyle}">
+                    <StackPanel>
+                        <StackPanel x:Name="EditContent">
+                            <!-- Контент для редактирования -->
+                        </StackPanel>
+                        <Button Content="Закрыть" Style="{StaticResource SubtleBentoButtonStyle}" HorizontalAlignment="Center" Margin="0,20,0,0" Click="CloseEditPanel_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Слой для блокировки аккаунта -->
+        <Grid x:Name="BannedOverlayLayer" Style="{StaticResource OverlayStyle}" Panel.ZIndex="1002" Visibility="Collapsed">
+            <Grid Width="500" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                <Border Style="{StaticResource BentoContentContainerStyle}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Ваш аккаунт заблокирован" 
+                           Foreground="#FF4655" 
+                           FontSize="28" 
+                           FontWeight="Bold" 
+                           TextAlignment="Center" 
+                           Margin="0,0,0,20"/>
+                        <TextBlock Text="Свяжитесь с администратором: admin@vbank.com" 
+                           Foreground="#FFFFFF" 
+                           FontSize="16" 
+                           TextAlignment="Center" 
+                           Margin="0,0,0,30"/>
+                        <Button Content="Вернуться на главную" 
+                        Style="{StaticResource BentoButtonStyle}" 
+                        Width="250" 
+                        Click="ReturnToMain_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>

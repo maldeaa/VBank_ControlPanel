@@ -1,0 +1,238 @@
+﻿<mah:MetroWindow x:Class="VBank_ControlPanel.Windows.ClientLandingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VBank_ControlPanel.Windows"
+        mc:Ignorable="d"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+Title="VBank: Добро пожаловать"
+        Width="800" Height="600"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E" WindowTitleBrush="#FF4655" BorderBrush="#FF4655" GlowBrush="#FF4655" BorderThickness="1" TitleForeground="White" Cursor="">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Стиль для Rectangle (фон, тень и обводка бенто-карточек) -->
+            <Style x:Key="BentoCardBackgroundStyle" TargetType="Rectangle">
+                <Setter Property="Fill" Value="#2D2D2D"/>
+                <Setter Property="RadiusX" Value="16"/>
+                <Setter Property="RadiusY" Value="16"/>
+                <Setter Property="Margin" Value="10"/>
+                <Setter Property="Stroke" Value="#444444"/>
+                <!-- Добавлена серая обводка -->
+                <Setter Property="StrokeThickness" Value="1"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="15" ShadowDepth="5" Color="#333333" Opacity="0.7" RenderingBias="Quality"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Стиль для контейнера контента (без эффектов) -->
+            <Style x:Key="BentoContentContainerStyle" TargetType="Border">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Padding" Value="20"/>
+            </Style>
+
+            <Style x:Key="BentoButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+                <Setter Property="Width" Value="200"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Margin" Value="0,15,0,0"/>
+            </Style>
+
+            <!-- Стиль для Rectangle фона FloatingPanel -->
+            <Style x:Key="FloatingPanelBackgroundStyle" TargetType="Rectangle">
+                <Setter Property="Fill" Value="#2D2D2D"/>
+                <Setter Property="RadiusX" Value="12"/>
+                <Setter Property="RadiusY" Value="12"/>
+                <Setter Property="Stroke" Value="#444444"/>
+                <!-- Добавлена серая обводка -->
+                <Setter Property="StrokeThickness" Value="1"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="15" ShadowDepth="5" Color="#333333" Opacity="0.7" RenderingBias="Quality"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="FloatingPanelStyle" TargetType="Border">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Padding" Value="20"/>
+                <Setter Property="Opacity" Value="0"/>
+            </Style>
+
+            <Style x:Key="BentoTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,5,0,0"/>
+            </Style>
+
+            <Style x:Key="CloseButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="#666666"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="Width" Value="30"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#FF5555"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#CC0000"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Основной контент -->
+        <Grid x:Name="MainContent">
+            <Grid.Background>
+                <ImageBrush ImageSource="/raw.png" Opacity="0.5" RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill"/>
+            </Grid.Background>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Логотип сверху по центру -->
+            <Border Margin="0,30,0,10" HorizontalAlignment="Center" Background="Transparent" CornerRadius="16">
+                <Image Source="/Images/vbank.png" Width="200" Height="100" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Border>
+
+            <!-- Основная секция с бенто-карточками -->
+            <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!-- Карты входа -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Grid Width="300">
+                        <!-- Фиксированная ширина для равенства -->
+                        <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                        <Border Style="{StaticResource BentoContentContainerStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Я клиент" Style="{StaticResource BentoTextStyle}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Войдите в личный кабинет" Style="{StaticResource BentoTextStyle}" Foreground="#CCCCCC"/>
+                                <Button Content="Войти как клиент" Style="{StaticResource BentoButtonStyle}" Click="ClientLogin_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid Width="300">
+                        <!-- Фиксированная ширина для равенства -->
+                        <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                        <Border Style="{StaticResource BentoContentContainerStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Я сотрудник" Style="{StaticResource BentoTextStyle}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Войдите в систему управления" Style="{StaticResource BentoTextStyle}" Foreground="#CCCCCC"/>
+                                <Button Content="Войти как сотрудник" Style="{StaticResource BentoButtonStyle}" Click="EmployeeLogin_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Карточка "Стать клиентом" -->
+                <Grid Width="300" HorizontalAlignment="Center">
+                    <!-- Фиксированная ширина и центрирование -->
+                    <Rectangle Style="{StaticResource BentoCardBackgroundStyle}"/>
+                    <Border Style="{StaticResource BentoContentContainerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Стать клиентом" Style="{StaticResource BentoTextStyle}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Узнайте, как начать с VBank" Style="{StaticResource BentoTextStyle}" Foreground="#CCCCCC"/>
+                            <Button x:Name="HowToBecomeClientButton" Content="Узнать больше" Style="{StaticResource SubtleBentoButtonStyle}" Click="HowToBecomeClient_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <!-- Floating-панель в отдельном слое с затемнением -->
+        <Grid x:Name="OverlayLayer" Visibility="Collapsed">
+            <Rectangle x:Name="OverlayBackground" Fill="Black" Opacity="0"/>
+            <Grid Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!-- Фиксированный размер -->
+                <Rectangle Style="{StaticResource FloatingPanelBackgroundStyle}"/>
+                <Border x:Name="FloatingPanel" Style="{StaticResource FloatingPanelStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="ClosePanelButton" Content="X" Style="{StaticResource CloseButtonStyle}" 
+                                HorizontalAlignment="Right" Margin="0,5,5,0" Click="ClosePanel_Click"/>
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Text="Станьте клиентом VBank!" Style="{StaticResource BentoTextStyle}" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock Text="Позвоните нам или посетите отделение:" Style="{StaticResource BentoTextStyle}" Foreground="#CCCCCC" Margin="0,10,0,0"/>
+                            <TextBlock Text="+7 (999) 123-45-67" Style="{StaticResource BentoTextStyle}" Foreground="#1E90FF" Margin="0,5,0,0"/>
+                            <TextBlock Text="+7 (999) 987-65-43" Style="{StaticResource BentoTextStyle}" Foreground="#1E90FF" Margin="0,5,0,0"/>
+                            <TextBlock Text="или оставьте заявку онлайн." Style="{StaticResource BentoTextStyle}" Foreground="#CCCCCC" Margin="0,10,0,0"/>
+                            <Button Content="Оставить заявку" Style="{StaticResource BentoButtonStyle}" Margin="0,15,0,0" Click="ShowRegistrationPanel_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+        <!-- Панель регистрации -->
+        <Grid x:Name="RegistrationLayer" Visibility="Collapsed">
+            <Rectangle x:Name="RegistrationOverlayBackground" Fill="Black" Opacity="0"/>
+            <Grid Width="400" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Rectangle Style="{StaticResource FloatingPanelBackgroundStyle}"/>
+                <Border x:Name="RegistrationPanel" Style="{StaticResource FloatingPanelStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="CloseRegistrationPanelButton" Content="X" Style="{StaticResource CloseButtonStyle}" 
+                        HorizontalAlignment="Right" Margin="0,5,5,0" Click="CloseRegistrationPanel_Click"/>
+                        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                            <TextBlock Text="Регистрация клиента" Style="{StaticResource BentoTextStyle}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Введите ваши данные для регистрации в VBank" Style="{StaticResource BentoTextStyle}" Foreground="#CCCCCC" Margin="0,10,0,0" TextWrapping="Wrap" TextAlignment="Center"/>
+
+                            <TextBlock Text="ФИО" Style="{StaticResource BentoTextStyle}" Margin="0,20,0,5"/>
+                            <TextBox x:Name="FullNameTextBox" Style="{StaticResource ZBankTextBoxStyle}" Width="300" Height="30" 
+                             TextAlignment="Left" VerticalContentAlignment="Center" Padding="5"/>
+
+                            <TextBlock Text="Паспортные данные" Style="{StaticResource BentoTextStyle}" Margin="0,15,0,5"/>
+                            <TextBox x:Name="PassportTextBox" Style="{StaticResource ZBankTextBoxStyle}" Width="300" Height="30" 
+                             TextAlignment="Left" VerticalContentAlignment="Center" Padding="5"/>
+
+                            <TextBlock Text="Номер телефона" Style="{StaticResource BentoTextStyle}" Margin="0,15,0,5"/>
+                            <TextBox x:Name="PhoneNumberTextBox" Style="{StaticResource ZBankTextBoxStyle}" Width="300" Height="30" 
+                             TextAlignment="Left" VerticalContentAlignment="Center" Padding="5"/>
+
+                            <TextBlock Text="Email" Style="{StaticResource BentoTextStyle}" Margin="0,15,0,5"/>
+                            <TextBox x:Name="EmailTextBox" Style="{StaticResource ZBankTextBoxStyle}" Width="300" Height="30" 
+                             TextAlignment="Left" VerticalContentAlignment="Center" Padding="5"/>
+
+                            <Button Content="Зарегистрироваться" Style="{StaticResource BentoButtonStyle}" Margin="0,20,0,0" Click="SubmitRegistration_Click" FontSize="12" Height="32" Cursor="Hand"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</mah:MetroWindow>
